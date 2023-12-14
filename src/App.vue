@@ -5,12 +5,12 @@
     </header>
 
     <section class="main-content w-50 mx-auto">
-      <main-navigation @see-Sensors="changeView" @see-Machines="changeView"></main-navigation>
+      <main-navigation @see-Sensors="changeViewToSensor" @see-Machines="changeViewToMachine" @see-Reservations="changeViewToReservation"></main-navigation>
       <machines-list v-if="machinesSelectedTrue" ></machines-list>
       <sensor-list v-if="sensorsSelectedTrue"></sensor-list>
-      
-      <!-- <rooms-list></rooms-list> -->
+      <reservations-list v-if="reservationsSelectedBool"></reservations-list>
     </section>
+
   </div>
 </template>
 
@@ -19,6 +19,7 @@ import MainNavigation from './components/MainNavigation.vue';
 import SensorList from './components/SensorList.vue';
 import RoomsList from './components/RoomsList.vue';
 import MachinesList from './components/MachinesList.vue'
+import ReservationsList from './components/ReservationsList.vue'
 
 export default {
   name: 'App',
@@ -26,21 +27,32 @@ export default {
     MainNavigation,
     SensorList,
     RoomsList,
-    MachinesList
+    MachinesList,
+    ReservationsList
   },
   data: function() {
     return {
-      title: 'Vue listing frontend Test',
-      sensorsSelectedTrue: true,
-      machinesSelectedTrue: false,
-      // reservationsSelectedBool: false,
+      title: 'Laundry Management Application',
+      sensorsSelectedTrue: false,
+      machinesSelectedTrue: true,
+      reservationsSelectedBool: false,
     }
   },
   methods: {
-    changeView(){
-      this.sensorsSelectedTrue = !this.sensorsSelectedTrue;
-      this.machinesSelectedTrue = !this.machinesSelectedTrue; 
-      // this.reservationsSelectedBool = !this.reservationsSelectedBool;
+    changeViewToMachine(){
+      this.sensorsSelectedTrue = false;
+      this.machinesSelectedTrue = true; 
+      this.reservationsSelectedBool = false;
+    },
+    changeViewToReservation(){
+      this.sensorsSelectedTrue = false;
+      this.machinesSelectedTrue = false; 
+      this.reservationsSelectedBool = true;
+    },
+    changeViewToSensor(){
+      this.sensorsSelectedTrue = true;
+      this.machinesSelectedTrue = false; 
+      this.reservationsSelectedBool = false;
     }
 
   }
