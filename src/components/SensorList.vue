@@ -3,14 +3,15 @@
 
 
     <template v-if="!isCreatingSensor">
-
+      <sensor-list-item v-for="sensor in sensors" :sensor="sensor" :key="sensor.sensorId" @sensor-updated="updateSensor"  @sensor-deleted="handleSensorDeleted">
+        {{ sensor.sensorName }}
+      </sensor-list-item>
+      
       <div class="d-flex mb-2">
       <button type="button" class="btn btn-primary" @click="isCreatingSensor = true">Create a new sensor</button>
       </div>
 
-      <sensor-list-item v-for="sensor in sensors" :sensor="sensor" :key="sensor.sensorId" @sensor-updated="updateSensor"  @sensor-deleted="handleSensorDeleted">
-        {{ sensor.sensorName }}
-      </sensor-list-item>
+      
 
     </template>
 
