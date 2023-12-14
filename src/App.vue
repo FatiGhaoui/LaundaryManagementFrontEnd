@@ -6,7 +6,7 @@
 
     <section class="main-content w-50 mx-auto">
       <main-navigation></main-navigation>
-      <windows-list></windows-list>
+      <sensor-list></sensor-list>
       <!-- <rooms-list></rooms-list> -->
     </section>
   </div>
@@ -14,19 +14,19 @@
 
 <script>
 import MainNavigation from './components/MainNavigation.vue';
-import WindowsList from './components/WindowsList.vue';
+import SensorList from './components/SensorList.vue';
 import RoomsList from './components/RoomsList.vue';
 
 export default {
   name: 'App',
   components: {
     MainNavigation,
-    WindowsList,
+    SensorList,
     RoomsList
   },
   data: function() {
     return {
-      title: 'My Frontend'
+      title: 'My Sensors'
     }
   }
 }

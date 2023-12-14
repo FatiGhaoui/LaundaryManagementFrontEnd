@@ -19,6 +19,8 @@ export default defineConfig({
       '/api': {
         target: backendHost,
         changeOrigin: true,
+        
+        
         rewrite: (path) => { console.log(path); return path.replace('/^\/api/', '') },
         secure: false,
         ws: true,
