@@ -17,7 +17,6 @@
 <script>
 import MainNavigation from './components/MainNavigation.vue';
 import SensorList from './components/SensorList.vue';
-import RoomsList from './components/RoomsList.vue';
 import MachinesList from './components/MachinesList.vue'
 import ReservationsList from './components/ReservationsList.vue'
 
@@ -26,7 +25,6 @@ export default {
   components: {
     MainNavigation,
     SensorList,
-    RoomsList,
     MachinesList,
     ReservationsList
   },
