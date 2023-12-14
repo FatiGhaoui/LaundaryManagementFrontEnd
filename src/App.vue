@@ -5,8 +5,10 @@
     </header>
 
     <section class="main-content w-50 mx-auto">
-      <main-navigation></main-navigation>
-      <sensor-list></sensor-list>
+      <main-navigation @see-Sensors="changeView" @see-Machines="changeView"></main-navigation>
+      <machines-list v-if="machinesSelectedTrue" ></machines-list>
+      <sensor-list v-if="sensorsSelectedTrue"></sensor-list>
+      
       <!-- <rooms-list></rooms-list> -->
     </section>
   </div>
@@ -16,18 +18,31 @@
 import MainNavigation from './components/MainNavigation.vue';
 import SensorList from './components/SensorList.vue';
 import RoomsList from './components/RoomsList.vue';
+import MachinesList from './components/MachinesList.vue'
 
 export default {
   name: 'App',
   components: {
     MainNavigation,
     SensorList,
-    RoomsList
+    RoomsList,
+    MachinesList
   },
   data: function() {
     return {
-      title: 'My Sensors'
+      title: 'Vue listing frontend Test',
+      sensorsSelectedTrue: true,
+      machinesSelectedTrue: false,
+      // reservationsSelectedBool: false,
     }
+  },
+  methods: {
+    changeView(){
+      this.sensorsSelectedTrue = !this.sensorsSelectedTrue;
+      this.machinesSelectedTrue = !this.machinesSelectedTrue; 
+      // this.reservationsSelectedBool = !this.reservationsSelectedBool;
+    }
+
   }
 }
 </script>
