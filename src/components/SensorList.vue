@@ -17,15 +17,12 @@
 
     <template v-if="isCreatingSensor">
        
-      <div class="d-flex mb-2">
-        <button type="button" class="btn btn-primary me-2"  @click="createSensor">Create</button>
-        <button type="button" class="btn btn-danger" @click="isCreatingSensor = false">Cancel</button>
-      </div>
       <div v-if="sensorCreationError" class="alert alert-danger" role="alert">
       An unexpected problem occurred, the sensor could not be created.
-    </div>
+      </div>
 
       <form>
+        <h1> Create new Sensor</h1>
         <input type="text" class="form-control mb-3" placeholder="Sensor name" v-model="newSensor.name">
         <select class="form-select">
         <option selected>-- Select Sensor Type --</option>
@@ -33,6 +30,11 @@
 
         </select>
       </form> 
+      
+      <div class="d-flex mb-2">
+        <button type="button" class="btn btn-primary me-2"  @click="createSensor">Create</button>
+        <button type="button" class="btn btn-danger" @click="isCreatingSensor = false">Cancel</button>
+      </div>
 
     </template>
 
@@ -120,4 +122,7 @@ export default {
 }
 </script>
 <style lang="scss">
+.form-select {
+  margin-bottom: 1rem; 
+}
 </style>
