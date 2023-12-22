@@ -77,7 +77,7 @@ export default {
     },
     async switchAvailability() {
       if (confirm("Updating Availability status of machine")){
-        let response = await axios.put(`${backendHost}/api/machines/updateAvailable/${this.machine.machineId}`);
+        let response = await axios.put(`${API_HOST}/api/machines/updateAvailable/${this.machine.machineId}`);
         let updatedMachine = response.data;
         this.$emit('machine-updated', updatedMachine);
       }
@@ -90,7 +90,7 @@ export default {
 
     async deleteMachine() {
       // if (confirm("Confirm delete machine")){
-        let response = await axios.delete(`${backendHost}/api/machines/${this.machine.machineId}`);
+        let response = await axios.delete(`${API_HOST}/api/machines/${this.machine.machineId}`);
         this.$emit('machine-deleted',this.machine.machineId),
         this.showConfirmationDialog = false;
       // }

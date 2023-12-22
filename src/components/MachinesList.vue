@@ -65,7 +65,7 @@ export default {
     }
   },
   created: async function () {
-    let response = await axios.get(`${backendHost}/api/machines`, {
+    let response = await axios.get(`${API_HOST}/api/machines`, {
       headers: {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Headers': '*',
@@ -108,7 +108,7 @@ export default {
         progress: 0
       }
       try{
-        let response = await axios.post(`${backendHost}/api/machines`, jsonPayload);
+        let response = await axios.post(`${API_HOST}/api/machines`, jsonPayload);
         if(response.status=200){
           this.machines.push(response.data);
           this.showMachineCreationForm();
