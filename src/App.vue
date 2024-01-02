@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <header>
-      <div class="title">{{title}}</div>
+      <h1><div class="title">{{title}}</div></h1>      
     </header>
 
     <section class="main-content w-50 mx-auto">
@@ -36,6 +36,7 @@ export default {
       reservationsSelectedBool: false,
     }
   },
+
   methods: {
     changeViewToMachine(){
       this.sensorsSelectedTrue = false;
@@ -62,12 +63,12 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  margin-top: 60px;
+  color: dark;  
+  margin-top: 30px;
 
   .title {
     text-align: center;
+    margin-bottom: 15px;
   }
 }
-
 </style>

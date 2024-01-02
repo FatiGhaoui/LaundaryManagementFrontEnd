@@ -1,51 +1,54 @@
 <template>
   <div class="windows-list pt-3">
-    <!-- <windows-list-item v-for="window in windows" :window="window" :key="window.machineId" @window-updated="updateWindow">
-    </windows-list-item> -->
-
-    <machines-list-item v-for="machine in machines" :machine="machine" :key="machine.machineId" @machine-updated="updateMachine" @machine-deleted="updateView">
+    <machines-list-item v-for="machine in machines" :machine="machine" :key="machine.machineId"
+      @machine-updated="updateMachine" @machine-deleted="updateView">
     </machines-list-item>
 
-    <!-- <li class="temporary-machine-list" v-for="machine in machines"> {{ machine.name }}</li> -->
-
-    <div class="d-flex mb-2" v-if="!showForm">
-      <button type="button" class="btn btn-primary" @click="showMachineCreationForm">Create new machine</button>
+    <div class="d-flex mb-2">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal"
+        :class="{ created: isCreated }" @click="openCreateModal">
+        Create new machine
+      </button>
     </div>
 
-    <div v-if="showForm" class="creation-form">
-      <form>
-        <h1> Create new machine</h1>
-        <input type="text" class="form-control mb-3" placeholder="Machine name" v-model="machineName">
-        
-        <!-- <select class="form-select" v-model="machineStatus">
-          <option selected>-- Available status --</option>
-          <option value=true>Machine available</option>
-          <option value=false>Machine unavailable</option>
-        </select> -->
-      </form> 
-
-      <div v-if="showAlertMessage" class="alert alert-danger" role="alert">
-        An unexpected problem occured, the window could not be created
+    <template v-if="isCreated">
+      <div class="modal fade show d-block" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true" style="z-index: 1050;">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">New Machine</h5>
+              <button type="button" class="btn-close" aria-label="Close" @click="openCreateModal"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <input type="text" class="form-control mb-3" placeholder="Machine name" v-model="machineName">
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-primary" @click="createNewMachine">Create Machine</button>
+              <button type="button" class="btn btn-danger" @click="openCreateModal">Cancel</button>
+            </div>
+          </div>
+        </div>
       </div>
+    </template>
 
-      <div class="d-flex mb-2">
-        <button type="button" class="btn btn-primary me-2" @click="createNewMachine">Create</button>
-        <button type="button" class="btn btn-danger" @click="cancelCreation">Cancel</button>
+    <template v-if="showUnexpectedError">
+      <div class="alert alert-danger" role="alert" style="border: 1px solid red;
+        background-color: #ffeaea; color: red; padding: 10px; margin-top: 10px; z-index: 1051;">
+        <strong>Error: </strong>An unexpected problem has occurred, the reservation could not be created because the name
+        is not available.
+        <strong>(Required field)</strong>
       </div>
-
-      
-    </div>
-
-
-    
+    </template>
   </div>
 </template>
-
 
 <script>
 import axios from 'axios';
 import { API_HOST } from '../config';
-import { backendHost} from '../../backend.config';
+import { backendHost } from '../../backend.config';
 import MachinesListItem from "./MachinesListItem.vue";
 
 export default {
@@ -55,13 +58,10 @@ export default {
   name: 'MachinesList',
   data: function () {
     return {
-      /* Initialize windows with an empty array, while waiting for actual data to be retrieved from the API */
-      // windows: [],
-      machines:[],
-      showForm: false,
-      machineName:"",
-      showAlertMessage: false
-      // machineStatus: false
+      machines: [],
+      isCreated: false,
+      showUnexpectedError: false,
+      machineName: "",
     }
   },
   created: async function () {
@@ -72,34 +72,27 @@ export default {
         'Access-Control-Allow-Credentials': 'true'
       }
     });
-    // let windows = response.data;
     let machines = response.data;
-    // this.windows = windows;
     this.machines = machines;
   },
   methods: {
-    
+    openCreateModal() {
+      this.isCreated = !this.isCreated;
+      this.showUnexpectedError = false;
+      this.resetForm();
+    },
+
     updateMachine(newMachine) {
-      /* Find the place of window object with the same Id in the array, and replace it */
       let index = this.machines.findIndex(machine => machine.machineId === newMachine.machineId);
-      console.log("update machine", newMachine);
       this.machines.splice(index, 1, newMachine);
     },
 
-    updateView(machineId){
+    updateView(machineId) {
       let index = this.machines.findIndex(machine => machine.machineId === machineId);
-      this.machines.splice(index,1);
+      this.machines.splice(index, 1);
     },
 
-    showMachineCreationForm(){
-      this.showForm = !this.showForm;
-    },
-
-    showAlert(){
-      this.showAlertMessage = true;
-    },
-
-    async createNewMachine(){
+    async createNewMachine() {
       let jsonPayload = {
         machineId: 0,
         name: this.machineName,
@@ -107,29 +100,32 @@ export default {
         machineStatus: true,
         progress: 0
       }
-      try{
-        let response = await axios.post(`${API_HOST}/api/machines`, jsonPayload);
-        if(response.status=200){
-          this.machines.push(response.data);
-          this.showMachineCreationForm();
-        }else{
-          this.showAlert();
-        }
-      }catch{
-        this.showAlert();
-      }
-      
-    },
 
-    cancelCreation(){
-      if(confirm("Cancel creation of new machine?")){
-        this.showMachineCreationForm();
+      try {
+        if (!this.machineName) {
+          this.showUnexpectedError = true;
+          setTimeout(() => {
+            this.showUnexpectedError = false;
+          }, 2000);
+          return;
+        }
+
+        let response = await axios.post(`${API_HOST}/api/machines`, jsonPayload);
+        if (response.status === 200) {
+          this.machines.push(response.data);
+          this.isCreated = false;
+          this.machineName = '';
+          this.$forceUpdate();
+        } else {
+          console.error('Server responded with a non-successful status:', response.status);
+          this.showUnexpectedError = true;
+        }
+      } catch (error) {
+        console.error('Error occurred while making the request:', error);
       }
     }
-
   }
 }
 </script>
 
-<style lang="scss">
-</style>
+<style lang="scss"></style>

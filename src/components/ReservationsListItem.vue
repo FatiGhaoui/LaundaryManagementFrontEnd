@@ -4,71 +4,87 @@
       <div class="reservation-id fw-bold pe-3">Reservation {{ reservation.reservationId }}</div>
       <div class="reservation-User text-muted"> by user {{ reservation.reservationUser }}</div>
 
-      <!-- Estado de la reserva -->
-      <div class="open-status ms-4" :class="{ open: isReservationAvailable, closed: !isReservationAvailable }">
-        <template v-if="isReservationAvailable">
+      <div class="ms-auto d-flex align-items-center">
+        <div v-if="isReservationAvailable" class="text-success me-2">
           <span class="icon">&#x2B24;</span> Available
-        </template>
-        <template v-else>
-          <div class="alert alert-danger" role="alert">
-            Data is missing to create the reservation.
-          </div>
+        </div>
+        <div v-else class="text-danger me-2">
           <span class="icon">&#x2716;</span> Not available
-        </template>
-      </div>
-
-      <div class="expand-button ms-auto">
-        {{ isExpanded ? '&#9660;' : '&#9658;' }}
+          <div class="alert alert-danger" role="alert"
+            style="border: 1px solid red; background-color: #ffeaea; color: red; padding: 10px; margin-top: 10px;">
+            <strong>Error:</strong> Data is missing to create the reservation.
+          </div>
+        </div>
+        <div class="expand-button">
+          {{ isExpanded ? '&#9660;' : '&#9658;' }}
+        </div>
       </div>
     </div>
 
     <template v-if="isExpanded">
-      <hr />
-      <!-- Botones reserva -->
-      <div class="information modal-dialog">
-        <div class="reservation-Date fw-bold pe-3">Date {{ reservation.reservationDate }}</div>
-        <div class="reservation-Time text-muted"> Start Time: {{ reservation.reservationStartTime }}</div>
-        <div class="reservation-Time text-muted"> End Time: {{ reservation.reservationEndTime }}</div>
+      <div class="information py-3 border-bottom border-top">
+        <div class="fw-bold">Date: {{ reservation.reservationDate }}</div>
+        <div class="text-muted">Start Time: {{ reservation.reservationStartTime }}</div>
+        <div class="text-muted">End Time: {{ reservation.reservationEndTime }}</div>
       </div>
-      <div class="details d-flex">
-        <button type="button" class="btn btn-secondary me-2" :class="{ edited: isEdited }"
+      <div class="details d-flex py-3">
+        <button type="button" class="btn btn-primary me-2" :class="{ edited: isEdited }"
           @click="openEditModal">Edit</button>
-        <button type="button" class="btn btn-danger me-2" :class="{ deleted: isDeleted }"
+        <button type="button" class="btn btn-danger" :class="{ deleted: isDeleted }"
           @click="openDeleteModal">Delete</button>
       </div>
 
       <!-- Modal para editar la reserva -->
       <template v-if="isEdited">
         <!-- Campos para editar la fecha, hora de inicio y hora de finalización -->
-        <div class="modal-background">
+        <div class="modal fade show d-block" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
-              <label for="editDate">Date:</label>
-              <input type="date" id="editDate" v-model="editedReservation.reservationDate">
-
-              <label for="editStartTime">Start Time:</label>
-              <input type="time" id="editStartTime" v-model="editedReservation.reservationStartTime">
-
-              <label for="editEndTime">End Time:</label>
-              <input type="time" id="editEndTime" v-model="editedReservation.reservationEndTime">
-              <button class="btn btn-primary" @click="updateReservation">Save Changes</button>
-              <button @click="openEditModal" class="btn btn-danger me-2">Cancel</button>
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit Reservation by User: {{ reservation.reservationUser }}
+                </h5>
+                <button type="button" class="btn-close" aria-label="Close" @click="openEditModal"></button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3">
+                    <label for="editDate" class="form-label">Date:</label>
+                    <input type="date" class="form-control" id="editDate" v-model="editedReservation.reservationDate">
+                  </div>
+                  <div class="mb-3">
+                    <label for="editStartTime" class="form-label">Start Time:</label>
+                    <input type="time" class="form-control" id="editStartTime"
+                      v-model="editedReservation.reservationStartTime">
+                  </div>
+                  <div class="mb-3">
+                    <label for="editEndTime" class="form-label">End Time:</label>
+                    <input type="time" class="form-control" id="editEndTime"
+                      v-model="editedReservation.reservationEndTime">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" @click="updateReservation">Save Changes</button>
+                <button type="button" class="btn btn-danger" @click="openEditModal">Cancel</button>
+              </div>
             </div>
           </div>
         </div>
-      </template>    
+      </template>
 
       <!-- Modal para eliminar la reserva -->
       <template v-if="isDeleted">
-        <div class="modal-background">
+        <div class="modal fade show d-block" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel"
+          aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-body">
                 Are you sure you want to delete Reservation {{ reservation.reservationId }}?
               </div>
               <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" @click="openDeleteModal">Close</button>
-                <button type="button" class="btn btn-primary" @click="deleteReservation">Confirm</button>
+                <button type="button" class="btn btn-primary" @click="openDeleteModal">Close</button>
+                <button type="button" class="btn btn-danger" @click="deleteReservation">Delete</button>
               </div>
             </div>
           </div>
